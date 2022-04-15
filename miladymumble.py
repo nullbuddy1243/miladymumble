@@ -90,10 +90,7 @@ def sendTweet(tweet):
                         access_token=access_token,
                         access_token_secret=access_token_secret)
     client.create_tweet(text=tweet)
-<<<<<<< HEAD
 
 @app.get("/hello")
 async def hello(request: Request):
     return "hello milady"
-=======
->>>>>>> 10dfb2916556224ad26e06ebb8c957b7a1ad5e29
