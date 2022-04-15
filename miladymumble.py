@@ -4,12 +4,30 @@ import os
 import time
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+
 from web3.auto import w3
 from web3 import Web3
 from eth_account.messages import defunct_hash_message
 
 load_dotenv()
 app = FastAPI()
+
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8080",
+    "*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def setLastTweet(tokenId):
     store = pickledb.load('store.db', auto_dump=True)
@@ -72,3 +90,7 @@ def sendTweet(tweet):
                         access_token=access_token,
                         access_token_secret=access_token_secret)
     client.create_tweet(text=tweet)
+
+@app.get("/hello")
+async def hello(request: Request):
+    return "hello milady"
