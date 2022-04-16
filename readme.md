@@ -6,7 +6,9 @@
 
 yes, she can.  @miladymumble on bird site
 
-### make that milady polite: official polite manner school for misbehaving miladys
+### make that milady polite: 
+
+*official polite manner school for misbehaving miladys*
 
 uses `better_profanity` to find impolite words milady shouldnt be saying 
 
