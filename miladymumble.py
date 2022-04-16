@@ -100,7 +100,7 @@ def sendTweet(tweet, full):
                         access_token_secret=access_token_secret)
     
     herWords = full['message']
-    twitterResponse
+    twitterResponse = ''
     if isDirty(herWords):
         speakNoEvil = cleanHerWords(herWords)
         print(f"speak no evil: {speakNoEvil}")
