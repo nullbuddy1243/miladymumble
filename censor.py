@@ -56,7 +56,7 @@ def cleanHerWords(words):
     emojiReplace = random.choice(emojiAliases)
     politeWords = profanity.censor(words, emojiReplace)
     print(emoji.emojize('Python is :thumbsup:', language='alias'))
-    politeWords = emoji.emojize(politeWords)
+    politeWords = emoji.emojize(politeWords, language='alias')
     print(f"polite words: {politeWords}")
     return politeWords
 
