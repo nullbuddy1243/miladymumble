@@ -5,7 +5,8 @@ import time
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from censor import *
 
@@ -82,6 +83,7 @@ async def postTweet(request: Request):
     if(not verifyBalance(tweet)): 
         return {"Error": "Invalid Balance"}
     setLastTweet(tweet['tokenId'])
+
     sendTweet(tweet['message'])
     return {"Success": "Hello Milady"}
     
@@ -94,7 +96,16 @@ def sendTweet(tweet):
                         consumer_secret=consumer_secret,
                         access_token=access_token,
                         access_token_secret=access_token_secret)
-    client.create_tweet(text=tweet)
+    
+    herWords = tweet['message']
+    twitterResponse
+    if isDirty(herWords):
+        speakNoEvil = cleanHerWords(herWords)
+        print(f"speak no evil: {speakNoEvil}")
+        twitterResponse = client.create_tweet(text=speakNoEvil)
+        
+    else: 
+        twitterResponse = client.create_tweet(text=herWords)
 
 @app.get("/hello")
 async def hello(request: Request):
@@ -118,6 +129,24 @@ async def censoooor(request: Request, sheSaid: SheSaid):
         return speakNoEvil
     else:
         return sheSaid
+
+class CanShe(BaseModel):
+    tokenIds: list
+
+@app.post("/canshespeak")
+async def canSheSpeak(request: Request, canShe: CanShe):
+    print(canShe.tokenIds)
+    store = pickledb.load('store.db', auto_dump=True)
+    miladysCanTalks = []
+    for tokenId in canShe.tokenIds:
+        herLastWords = store.get(tokenId)
+        secondsInADay = 86400
+        if time.time() > herLastWords + secondsInADay: # a day in seconds
+            miladysCanTalks.append(tokenId)
+    output = jsonable_encoder({
+        "tokenIds": miladysCanTalks
+    })
+    return JSONResponse(content=output)
 
 
 @app.get("/censoooor", response_class=HTMLResponse)

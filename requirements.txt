@@ -60,3 +60,4 @@ web3==5.21.0
 websockets==9.1
 yarl==1.7.2
 git+https://github.com/nullbuddy1243/miladymumblepoliteness.git@master#egg=better_profanity
+pymongo==4.1.1
