@@ -5,6 +5,7 @@ import time
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from censor import *
 
@@ -117,6 +118,31 @@ async def censoooor(request: Request, sheSaid: SheSaid):
         return speakNoEvil
     else:
         return sheSaid
+
+
+@app.get("/censoooor", response_class=HTMLResponse)
+async def censoooor(request: Request):
+    words = request.query_params['words']
+    print(words)
+    sheDirty = isDirty(words)
+    print(f"is milady being rude? {isDirty(words)}")
+    
+    if sheDirty:
+        speakNoEvil = cleanHerWords(words)
+        print(f"speak no evil: {speakNoEvil}")
+        render =  f"""
+            <html>
+                <head>
+                    <title>miladymumble</title>
+                </head>
+                <body>
+                    <p>she said: {speakNoEvil}</p>
+                </body>
+            </html>
+        """
+        return render
+    else:
+        return words
 
 @app.get("/censoooor/politepictures")
 async def land(request: Request):

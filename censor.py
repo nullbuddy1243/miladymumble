@@ -40,6 +40,10 @@ def politePictures():
     ]
     return emojiAliases
 
+# def tidyClean(words):
+#     for e in politePictures():
+        
+
 # is a milady being rude?
 def isDirty(words):
     print(f"words: {words}")
@@ -51,6 +55,8 @@ def cleanHerWords(words):
     emojiAliases = politePictures()
     emojiReplace = random.choice(emojiAliases)
     politeWords = profanity.censor(words, emojiReplace)
+    print(emoji.emojize('Python is :thumbsup:', language='alias'))
+    politeWords = emoji.emojize(politeWords)
     print(f"polite words: {politeWords}")
     return politeWords
 
