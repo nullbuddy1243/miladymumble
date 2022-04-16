@@ -8,6 +8,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
+import pymongo
+
 from censor import *
 
 from web3.auto import w3
@@ -103,9 +105,30 @@ def sendTweet(tweet):
         speakNoEvil = cleanHerWords(herWords)
         print(f"speak no evil: {speakNoEvil}")
         twitterResponse = client.create_tweet(text=speakNoEvil)
-        
+        conn = pymongo.MongoClient("mongodb://mongo:2ekYhIAsAwvT4F77u7zy@containers-us-west-37.railway.app:8073")
+        db = conn['miladymumble']
+        sheSaid = db['shesaid']
+        insertSheSaid = {
+            "tweet": tweet,
+            "jsyk": "tweet key contains info about milady that sent that.",
+            "created": time.time(),
+            "twitterResponse": twitterResponse
+        }
+        saved = sheSaid.insert_one(insertSheSaid)
+        return JSONResponse(content= jsonable_encoder({"milady": "mumbled", "saved": saved}))
     else: 
         twitterResponse = client.create_tweet(text=herWords)
+        conn = pymongo.MongoClient("mongodb://mongo:2ekYhIAsAwvT4F77u7zy@containers-us-west-37.railway.app:8073")
+        db = conn['miladymumble']
+        sheSaid = db['shesaid']
+        insertSheSaid = {
+            "tweet": tweet,
+            "jsyk": "tweet key contains info about milady that sent that.",
+            "created": time.time(),
+            "twitterResponse": twitterResponse
+        }
+        saved = sheSaid.insert_one(insertSheSaid)
+        return JSONResponse(content= jsonable_encoder({"milady": "mumbled", "saved": saved}))
 
 @app.get("/hello")
 async def hello(request: Request):
