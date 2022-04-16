@@ -5,6 +5,8 @@ import time
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from censor import *
 
 from web3.auto import w3
 from web3 import Web3
@@ -100,3 +102,25 @@ async def hello(request: Request):
 @app.get("/")
 async def land(request: Request):
     return "hello milady"
+
+class SheSaid(BaseModel):
+    words: str
+
+@app.post("/censoooor")
+async def censoooor(request: Request, sheSaid: SheSaid):
+    print(sheSaid.words)
+    sheDirty = isDirty(sheSaid.words)
+    print(f"is milady being rude? {isDirty(sheSaid.words)}")
+    if sheDirty:
+        speakNoEvil = cleanHerWords(sheSaid.words)
+        print(f"speak no evil: {speakNoEvil}")
+        return speakNoEvil
+    else:
+        return sheSaid
+
+@app.get("/censoooor/politepictures")
+async def land(request: Request):
+    out = ""
+    for it in politePictures():
+        out += it
+    return out
