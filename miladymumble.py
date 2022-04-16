@@ -105,7 +105,9 @@ def sendTweet(tweet, full):
         speakNoEvil = cleanHerWords(herWords)
         print(f"speak no evil: {speakNoEvil}")
         twitterResponse = client.create_tweet(text=speakNoEvil)
-        conn = pymongo.MongoClient("mongodb://mongo:2ekYhIAsAwvT4F77u7zy@containers-us-west-37.railway.app:8073")
+        mongopw = os.getenv("mongopw")
+        mongostring = f"mongodb://mongo:{mongopw}@containers-us-west-37.railway.app:8073"
+        conn = pymongo.MongoClient(mongostring)
         db = conn['miladymumble']
         sheSaid = db['shesaid']
         insertSheSaid = {
@@ -118,7 +120,9 @@ def sendTweet(tweet, full):
         return JSONResponse(content= jsonable_encoder({"milady": "mumbled", "saved": saved}))
     else: 
         twitterResponse = client.create_tweet(text=herWords)
-        conn = pymongo.MongoClient("mongodb://mongo:2ekYhIAsAwvT4F77u7zy@containers-us-west-37.railway.app:8073")
+        mongopw = os.getenv("mongopw")
+        mongostring = f"mongodb://mongo:{mongopw}@containers-us-west-37.railway.app:8073"
+        conn = pymongo.MongoClient(mongostring)        
         db = conn['miladymumble']
         sheSaid = db['shesaid']
         insertSheSaid = {
