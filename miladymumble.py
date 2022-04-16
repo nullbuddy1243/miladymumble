@@ -79,15 +79,15 @@ async def postTweet():
 async def postTweet(request: Request):
     tweet = await request.json()
     if(not verifyLastTweet(tweet)):
-        return {"Error": "tweeting too soon"}
+        return {"Error": "tweeting too soon", "status": "error"}
     if(not verifySignature(tweet)): 
-        return {"Error": "Invalid Signature"}
+        return {"Error": "Invalid Signature", "status": "error"}
     if(not verifyBalance(tweet)): 
-        return {"Error": "Invalid Balance"}
+        return {"Error": "Invalid Balance", "status": "error"}
     setLastTweet(tweet['tokenId'])
 
-    sendTweet(tweet['message'], tweet)
-    return {"Success": "Hello Milady"}
+    
+    return sendTweet(tweet['message'], tweet)
     
 def sendTweet(tweet, full):
     consumer_key = os.getenv("CONSUMER_KEY")
@@ -105,6 +105,7 @@ def sendTweet(tweet, full):
         speakNoEvil = cleanHerWords(herWords)
         print(f"speak no evil: {speakNoEvil}")
         twitterResponse = client.create_tweet(text=speakNoEvil)
+
         mongopw = os.getenv("mongopw")
         mongostring = f"mongodb://mongo:{mongopw}@containers-us-west-37.railway.app:8073"
         conn = pymongo.MongoClient(mongostring)
@@ -116,8 +117,8 @@ def sendTweet(tweet, full):
             "created": time.time(),
             "twitterResponse": twitterResponse
         }
-        saved = sheSaid.insert_one(insertSheSaid)
-        return JSONResponse(content= jsonable_encoder({"milady": "mumbled", "saved": saved}))
+        sheSaid.insert_one(insertSheSaid)
+        return JSONResponse(content= jsonable_encoder({"milady": "mumbled", "status": "success"}))
     else: 
         twitterResponse = client.create_tweet(text=herWords)
         mongopw = os.getenv("mongopw")
@@ -131,8 +132,8 @@ def sendTweet(tweet, full):
             "created": time.time(),
             "twitterResponse": twitterResponse
         }
-        saved = sheSaid.insert_one(insertSheSaid)
-        return JSONResponse(content= jsonable_encoder({"milady": "mumbled", "saved": saved}))
+        sheSaid.insert_one(insertSheSaid)
+        return JSONResponse(content= jsonable_encoder({"milady": "mumbled", "status": "success"}))
 
 @app.get("/hello")
 async def hello(request: Request):
