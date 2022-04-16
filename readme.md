@@ -29,25 +29,6 @@ emojii censor currently:
 - :hear_no_evil:
 - :speak_no_evil:
 
-😂
-😴
-😇
-💞
-✌️
-👸
-👅
-🐤
-🌔
-🎊
-🛀
-🎱
-🚼
-📶
-🙈
-🙉
-🙊
-
-
 unicode standard text emojii aliases: https://www.webfx.com/tools/emoji-cheat-sheet/
 
 better_profanity: https://pypi.org/project/better-profanity/
