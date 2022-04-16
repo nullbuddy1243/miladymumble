@@ -86,10 +86,10 @@ async def postTweet(request: Request):
         return {"Error": "Invalid Balance"}
     setLastTweet(tweet['tokenId'])
 
-    sendTweet(tweet['message'])
+    sendTweet(tweet['message'], tweet)
     return {"Success": "Hello Milady"}
     
-def sendTweet(tweet):
+def sendTweet(tweet, full):
     consumer_key = os.getenv("CONSUMER_KEY")
     consumer_secret = os.getenv("CONSUMER_SECRET")
     access_token = os.getenv("ACCESS_TOKEN")
@@ -99,7 +99,7 @@ def sendTweet(tweet):
                         access_token=access_token,
                         access_token_secret=access_token_secret)
     
-    herWords = tweet['message']
+    herWords = full['message']
     twitterResponse
     if isDirty(herWords):
         speakNoEvil = cleanHerWords(herWords)
