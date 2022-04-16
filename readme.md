@@ -2,7 +2,11 @@
 
 *made with love by the cheezboys*
 
-### make that milady polite
+## milady can talk ???
+
+yes, she can.  @miladymumble on bird site
+
+### make that milady polite: official polite manner school for misbehaving miladys
 
 uses `better_profanity` to find impolite words milady shouldnt be saying 
 
