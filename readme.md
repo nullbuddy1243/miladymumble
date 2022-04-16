@@ -2,8 +2,6 @@
 
 *made with love by the cheezboys*
 
-for Qs dm @ChubaETH / @coolpatiens / @dooragcarlton / @fathereatsass 
-
 ### make that milady polite
 
 uses `better_profanity` to find impolite words milady shouldnt be saying 
@@ -45,3 +43,6 @@ emoji: https://pypi.org/project/emoji/
 https://remilia.org/
 
 https://miladymaker.net/
+
+#### 
+@ChubaETH / @coolpatiens / @dooragcarlton / @fathereatsass 
