@@ -89,6 +89,19 @@ async def postTweet(request: Request):
     
     return sendTweet(tweet['message'], tweet)
     
+@app.post("/retweet")
+def postRetweet(request: Request):
+    tweet = await request.json()
+    if(not verifyLastTweet(tweet)):
+        return {"Error": "tweeting too soon", "status": "error"}
+    if(not verifySignature(tweet)): 
+        return {"Error": "Invalid Signature", "status": "error"}
+    if(not verifyBalance(tweet)): 
+        return {"Error": "Invalid Balance", "status": "error"}
+    setLastTweet(tweet['tokenId'])
+    
+    return sendRetweet(tweet['tweetId'])
+    
 def sendTweet(tweet, full):
     consumer_key = os.getenv("CONSUMER_KEY")
     consumer_secret = os.getenv("CONSUMER_SECRET")
@@ -134,6 +147,32 @@ def sendTweet(tweet, full):
         }
         sheSaid.insert_one(insertSheSaid)
         return JSONResponse(content= jsonable_encoder({"milady": "mumbled", "status": "success"}))
+
+    
+def sendRetweet(tweetId):
+    consumer_key = os.getenv("CONSUMER_KEY")
+    consumer_secret = os.getenv("CONSUMER_SECRET")
+    access_token = os.getenv("ACCESS_TOKEN")
+    access_token_secret = os.getenv("ACCESS_TOKEN_SECRET")
+    client = tweepy.Client(consumer_key=consumer_key,
+                        consumer_secret=consumer_secret,
+                        access_token=access_token,
+                        access_token_secret=access_token_secret)
+    
+    twitterResponse = client.retweet(tweet_id=tweetId)
+    mongopw = os.getenv("mongopw")
+    mongostring = f"mongodb://mongo:{mongopw}@containers-us-west-37.railway.app:8073"
+    conn = pymongo.MongoClient(mongostring)        
+    db = conn['miladymumble']
+    sheSaid = db['sheretweet']
+    insertSheRetweet = {
+        "tweetId": tweetId,
+        "jsyk": "tweet key contains info about milady that sent that.",
+        "created": time.time(),
+        "twitterResponse": twitterResponse
+    }
+    sheSaid.insert_one(insertSheRetweet)
+    return JSONResponse(content= jsonable_encoder({"milady": "mumbled", "status": "success"}))
 
 @app.get("/hello")
 async def hello(request: Request):
